@@ -18,6 +18,7 @@ This dataset includes labeled "real" and "AI-generated" images across multiple c
 ## 👥 Team Roles & Responsibilities
 
 ### 🔍 **Marston Ward - Project Lead & Data Preparation**
+
 - Dataset exploration and visualization
 - Image preprocessing (resize, normalize)
 - Data augmentation strategies
@@ -26,6 +27,7 @@ This dataset includes labeled "real" and "AI-generated" images across multiple c
 - **Platform**: Mac M4 with MPS acceleration
 
 ### 🧠 **Victor Salcedo - Model Development** ✅ *Active*
+
 - Baseline CNN architecture design
 - MobileNetV2 transfer learning implementation
 - Training pipeline and hyperparameter tuning
@@ -34,6 +36,7 @@ This dataset includes labeled "real" and "AI-generated" images across multiple c
 - **Platform**: Flexible (Mac/Colab)
 
 ### 📈 **Jasper Dolar - Evaluation and Reporting** ⏳ *Pending*
+
 - Comprehensive model evaluation
 - Performance metrics calculation
 - Visualization and reporting
@@ -44,6 +47,7 @@ This dataset includes labeled "real" and "AI-generated" images across multiple c
 ## 🚀 Quick Start
 
 ### Prerequisites
+
 ```bash
 # Mac M4 or local setup
 pip install -r requirements.txt
@@ -53,6 +57,7 @@ pip install -r requirements.txt
 ```
 
 ### Usage
+
 1. **Setup Environment**: 
    - Mac M4: `python3 scripts/setup_cross_platform.py --platform mac_m4`
    - Colab: Run `notebooks/00_colab_setup.ipynb` first
@@ -63,25 +68,28 @@ pip install -r requirements.txt
 ## 🖥️ Platform Support
 
 ### 🍎 Mac M4 (Apple Silicon)
+
 - **MPS acceleration** for GPU-like performance
 - **Unified memory** architecture (16-64GB)
 - **Optimized PyTorch** with Apple Silicon support
 - **Setup**: `python3 scripts/setup_cross_platform.py --platform mac_m4`
 
 ### 🌐 Google Colab 
+
 - **Free GPU access** (T4, 12GB memory)
 - **Colab Pro** (V100/A100, up to 40GB)
 - **Persistent storage** via Google Drive
 - **Setup**: Run `notebooks/00_colab_setup.ipynb`
 
 ### 💻 Cross-Platform Features
+
 - **Automatic device detection** (CUDA/MPS/CPU)
 - **Platform-agnostic code** works everywhere
 - **Shared notebooks** compatible across platforms
 
 ## 📁 Project Structure
 
-```
+```bash
 ├── data/                          # Dataset storage
 │   ├── raw/                       # Original dataset
 │   ├── processed/                 # Preprocessed data
@@ -119,16 +127,19 @@ pip install -r requirements.txt
 ## 📊 Key Features
 
 ### Model Architectures
+
 - **Baseline CNN**: Custom architecture from scratch
 - **Transfer Learning**: Fine-tuned MobileNetV2
 
 ### Evaluation Metrics
+
 - Accuracy, Precision, Recall, F1-Score
 - Confusion Matrix
 - ROC Curves and AUC
 - Feature visualization
 
 ### Data Augmentation
+
 - Rotation, flipping, scaling
 - Color jittering
 - Gaussian noise
@@ -167,4 +178,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 For questions or collaboration opportunities, please open an issue or contact the team leads.
 
 ---
-*Last Updated: November 2024*
+"Last Updated: November 2024"

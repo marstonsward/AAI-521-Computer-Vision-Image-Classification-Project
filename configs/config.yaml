@@ -1,0 +1,106 @@
+# Project Configuration for AI-Generated Image Detection
+
+# Dataset Configuration
+dataset:
+  name: "Hemg/AI-Generated-vs-Real-Images-Datasets"
+  source: "huggingface"
+  cache_dir: "./data/raw"
+  
+# Data Processing
+data:
+  image_size: [224, 224]
+  batch_size: 32
+  num_workers: 4
+  pin_memory: true
+  
+  # Data splits
+  splits:
+    train: 0.7
+    val: 0.15
+    test: 0.15
+  
+  # Augmentation levels: light, medium, heavy
+  augmentation_level: "medium"
+  
+  # Class mapping
+  classes:
+    real: 0
+    ai_generated: 1
+
+# Model Configuration
+models:
+  baseline_cnn:
+    name: "BaselineCNN"
+    num_classes: 2
+    dropout_rate: 0.5
+    use_batch_norm: true
+    
+  mobilenet_v2:
+    name: "MobileNetV2"
+    pretrained: true
+    num_classes: 2
+    freeze_features: false
+    dropout_rate: 0.3
+
+# Training Configuration
+training:
+  epochs: 50
+  learning_rate: 0.001
+  weight_decay: 1e-4
+  
+  # Optimization
+  optimizer: "AdamW"
+  scheduler: "CosineAnnealingLR"
+  
+  # Early stopping
+  early_stopping:
+    patience: 10
+    min_delta: 0.001
+    monitor: "val_accuracy"
+  
+  # Checkpointing
+  save_best_model: true
+  save_last_model: true
+  
+# Evaluation Configuration
+evaluation:
+  metrics:
+    - "accuracy"
+    - "precision"
+    - "recall"
+    - "f1_score"
+    - "auc_roc"
+  
+  # Visualization
+  plot_confusion_matrix: true
+  plot_roc_curve: true
+  plot_training_history: true
+  
+  # Test Time Augmentation
+  tta:
+    enabled: false
+    num_augmentations: 5
+
+# Logging and Monitoring
+logging:
+  level: "INFO"
+  log_dir: "./logs"
+  
+  # Experiment tracking (optional)
+  wandb:
+    enabled: false
+    project: "ai-image-detection"
+    entity: "your-team"
+
+# Paths
+paths:
+  data_dir: "./data"
+  models_dir: "./models"
+  results_dir: "./results"
+  logs_dir: "./logs"
+  
+# Reproducibility
+random_seed: 42
+
+# Hardware
+device: "auto"  # auto, cuda, cpu

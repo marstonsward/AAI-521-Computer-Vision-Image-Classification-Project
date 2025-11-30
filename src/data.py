@@ -100,11 +100,16 @@ def prepare_data(dataset_name="Hemg/AI-Generated-vs-Real-Images-Datasets",
         tuple: (train_images, train_labels, val_images, val_labels, test_images, test_labels)
     """
     # Load dataset (without authentication - public dataset)
+    print(f"📦 Downloading dataset '{dataset_name}'...")
+    print("   (First run may take 1-3 minutes, then cached)")
     dataset = load_dataset(dataset_name, token=False)
+    print(f"✅ Dataset loaded: {len(dataset['train'])} total images")
     
     # Extract images and labels
+    print("🔄 Extracting images and labels...")
     images = [x['image'] for x in dataset['train']]
     labels = [x['label'] for x in dataset['train']]
+    print("✅ Extraction complete")
     
     # Shuffle with seed
     random.seed(seed)

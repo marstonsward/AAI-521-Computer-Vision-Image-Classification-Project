@@ -81,8 +81,15 @@ class Trainer:
                 self.optimizer.step()
             
             # Calculate accuracy
-            _, preds = torch.max(outputs, 1)
             batch_size = labels.size(0)
+            
+            # Handle both binary (BCEWithLogitsLoss) and multi-class (CrossEntropyLoss)
+            if outputs.dim() == 1 or outputs.size(1) == 1:
+                # Binary classification: apply sigmoid and threshold
+                preds = (torch.sigmoid(outputs.squeeze()) > 0.5).long()
+            else:
+                # Multi-class: use argmax
+                _, preds = torch.max(outputs, 1)
             
             running_loss += loss.item() * batch_size
             running_corrects += torch.sum(preds == labels).item()
@@ -108,8 +115,15 @@ class Trainer:
                 outputs = self.model(images)
                 loss = self.criterion(outputs, labels)
                 
-                _, preds = torch.max(outputs, 1)
                 batch_size = labels.size(0)
+                
+                # Handle both binary (BCEWithLogitsLoss) and multi-class (CrossEntropyLoss)
+                if outputs.dim() == 1 or outputs.size(1) == 1:
+                    # Binary classification: apply sigmoid and threshold
+                    preds = (torch.sigmoid(outputs.squeeze()) > 0.5).long()
+                else:
+                    # Multi-class: use argmax
+                    _, preds = torch.max(outputs, 1)
                 
                 running_loss += loss.item() * batch_size
                 running_corrects += torch.sum(preds == labels).item()

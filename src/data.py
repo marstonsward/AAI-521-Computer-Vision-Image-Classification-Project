@@ -34,6 +34,10 @@ class HuggingFaceImageDataset(Dataset):
         image = self.images[idx]
         label = self.labels[idx]
         
+        # Handle palette images with transparency
+        if image.mode == 'P' and 'transparency' in image.info:
+            image = image.convert('RGBA')
+        
         if self.transform:
             image = self.transform(image)
         

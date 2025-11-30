@@ -22,7 +22,7 @@ The models are trained on diverse content (people, objects, scenery) to identify
 - ⚡ **Automatic Mixed Precision (AMP)**: Faster training on GPU
 - 💾 **Auto-save Best Models**: Based on validation accuracy
 - 📈 **Rich Visualizations**: Training curves, confusion matrices, model comparison
-- 📄 **Academic Report**: Full LaTeX paper with code appendix in `src/report/`
+- 📄 **Academic Report**: Full LaTeX paper with code appendix in `report/`
 
 ## 📊 Dataset
 

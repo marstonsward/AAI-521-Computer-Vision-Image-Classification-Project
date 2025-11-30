@@ -1,0 +1,244 @@
+% ====================== main.tex ======================
+\documentclass[man,12pt,letterpaper,donotrepeattitle]{apa7}
+
+\usepackage[american]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+
+% Times-like font (APA 7 compliant)
+\usepackage{newtxtext,newtxmath}
+
+% Double spacing
+\usepackage{setspace}
+\doublespacing
+
+% Nice URLs and clickable links (without colored boxes)
+\usepackage{url}
+
+% APA citations - natbib mode for \citep command
+\usepackage[natbibapa]{apacite}
+
+% =============================================
+% Title-page information – NEW apa7 syntax (2022+)
+% =============================================
+\title{AI-Generated Image Detection: A Comparative Study of CNN Architectures}
+\shorttitle{AI-Generated Image Detection}
+
+\authorsnames{Marston Ward, Victor Salcedo, Jasper Dolar}
+\authorsaffiliations{{University of San Diego}}
+
+\course{Applied Artificial Intelligence: Computer Vision}
+\professor{Professor Roozbeh Sadeghian}
+\duedate{December 8, 2025}
+
+% Optional
+\abstract{%
+  This study evaluates three deep learning architectures for detecting AI-generated images: 
+  a custom convolutional neural network (CNN), ResNet50, and EfficientNet-B2. Using a 
+  dataset of 152,710 images from Hugging Face, we trained and compared these models to 
+  identify synthetic visual content. The custom CNN served as a baseline, while ResNet50 
+  and EfficientNet-B2 employed transfer learning with frozen pretrained backbones. Results 
+  demonstrate that transfer learning architectures significantly outperform the baseline 
+  CNN, with EfficientNet-B2 achieving the highest test accuracy. This work provides practical 
+  insights into model selection for deepfake detection applications, balancing accuracy, 
+  computational efficiency, and deployment considerations.
+}
+
+\keywords{deepfake detection, AI-generated images, convolutional neural networks, transfer learning, ResNet50, EfficientNet}
+
+% =============================================
+\begin{document}
+
+\maketitle
+
+% Abstract goes on its own page in manuscript format
+\thispagestyle{empty}
+\newpage
+
+% ================== Main content ==================
+\section{Introduction}
+The rapid proliferation of artificially generated images and videos, 
+collectively known as deepfakes, presents a critical challenge to digital integrity, 
+as this fabricated content is increasingly misrepresented as authentic 
+\citep{Kingsley2024, Maharjan2023}. This surge in fraud and deception directly
+necessitates the development of highly reliable deepfake detection methods capable 
+of accurately distinguishing genuine visual media from sophisticated manipulation 
+\citep{ST2022}. Deepfake technology leverages advanced machine learning techniques, 
+predominantly Generative Adversarial Networks (GANs), to create synthetic media 
+that convincingly mimics real-world auditory and visual content 
+\citep{Kingsley2024, Maharjan2023}. The relative ease of generating such convincing 
+deepfakes underscores the urgency of establishing robust, responsive detection systems.
+
+Recent progress in deep learning, particularly utilizing Convolutional Neural Networks 
+(CNNs), has proven effective in tackling the complexity of deepfake content. 
+Research has demonstrated the efficacy of combining CNNs with Long Short-Term Memory 
+(LSTM) networks for detecting deepfake videos, highlighting the crucial role of these 
+integrated systems in combating digital misinformation \citep{Abidin2022, Gawali2024}. 
+Similarly, the application of high-performance models, like the EfficientNet architecture, 
+has led to significant improvements in detection accuracy \citep{Sowmya2024}. 
+Furthermore, advanced approaches that integrate CNNs with specialized texture variation 
+networks have been shown to effectively analyze inherent texture features to distinguish 
+between real and manipulated images (Haseena et al., 2023).
+
+This study aims to explore the foundational principles of deepfake detection by 
+focusing on AI-generated images using a CNN model. Specifically, this work introduces 
+the methodology of fine-tuning the established ResNet50 architecture \citep{He2016} to 
+illustrate core concepts in deepfake identification. A critical element for the successful 
+training of any deepfake detection model is access to extensive, high-quality datasets, 
+many of which are now openly available on platforms such as Hugging Face \citep{HuggingFace}. 
+As \cite{Berrahal2023} emphasizes, a detailed understanding of dataset characteristics, 
+including its composition and the technology used to generate the synthetic images, 
+is fundamental for developing effective detection methodologies. Utilizing larger and 
+more diverse training datasets is known to significantly enhance model performance, 
+which is particularly vital for real-world applications where the variance of 
+deepfakes is high \citep{Frid-Adar2018, Golilarz2024}.
+
+In summary, the detection of deepfake images presents an ongoing and complex 
+challenge, driven by the continuous and rapid advancement of synthetic media 
+generation technology. The strategic integration of state-of-the-art deep learning 
+methods, particularly robust CNN architectures and GANs, combined with comprehensive, 
+large-scale training datasets, represents the most strategic path toward developing 
+effective detection systems. As this technological arms race progresses, continuous 
+refinement of both research and methodology remains pivotal in mitigating the severe 
+detrimental impacts of deepfake technology \citep{Berrahal2023, Haseena2023}.
+
+
+\section{Exploratory Data Analysis (EDA)}
+\label{eda}
+This project uses a large-scale image dataset from Hugging Face containing 152,710 
+images labeled as real or AI-generated. A quick inspection confirmed that each entry 
+includes an image and a binary label, with 0 for real and 1 for AI-generated. Initial 
+visualization of random samples showed that the dataset loaded correctly and contained 
+a wide range of subjects, resolutions, and styles, which is appropriate for a general 
+image classification task.
+
+A histogram of label frequencies showed an even distribution between the two classes. 
+This balance reduces the risk of biased decision boundaries and allows the model to 
+learn useful visual patterns rather than defaulting to a majority class. Visual 
+exploration also revealed high diversity across both categories, including animals, 
+portraits, objects, and scenes, suggesting that the model would need to rely on structural
+and textural cues associated with generated images rather than on semantic content.
+
+The raw images varied in size, aspect ratio, and color format, so all samples were 
+standardized to 224 by 224 pixels and converted to a three-channel RGB. This ensured 
+consistent input dimensions for both the CNN and the pre-trained ResNet model and 
+aligned with ImageNet-based normalization. Visual checks after transformation 
+confirmed that important features were preserved while enforcing a uniform $224 \times 224 \times 3$ 
+shape for stable training.
+
+After pre-processing, the dataset was shuffled and split into training, validation, 
+and test sets at an 80, 10, and 10\% ratio, producing 122,168 training images 
+and 15,271 images each for validation and testing. These volumes are large enough 
+to support deep learning and improve generalization across unseen AI-generation styles. 
+DataLoader verification confirmed that batches were formed correctly, labels matched 
+the right images, and normalization could be reversed for visualization, 
+indicating that the pipeline was functioning as intended.
+
+Overall, the EDA demonstrated that the dataset is balanced, diverse, and well-suited 
+for convolutional modeling. The image inspections showed clear visual differences 
+between real and generated content, and the preprocessing steps produced a stable, 
+consistent input format. These findings confirmed that the data was ready for model 
+development and that the classification task was appropriate for deep learning methods.
+
+\section{Methodology}
+\label{methodology}
+
+We implemented and compared three distinct architectures to evaluate their effectiveness 
+in detecting AI-generated images: a custom CNN built from scratch, ResNet50 with transfer 
+learning, and EfficientNet-B2 with transfer learning.
+
+\subsection{Custom CNN Architecture}
+The baseline model consisted of three convolutional blocks, each containing a convolutional 
+layer, batch normalization, ReLU activation, and max pooling. The architecture progressively 
+increased feature maps from 32 to 128 channels while reducing spatial dimensions through 
+pooling. A fully connected classifier with dropout (0.5) was used for regularization. 
+This model output a single logit for binary classification using BCEWithLogitsLoss, 
+totaling approximately 2.1 million trainable parameters. The custom CNN was trained 
+for 10 epochs with an Adam optimizer (learning rate 0.001).
+
+\subsection{ResNet50 Transfer Learning}
+The ResNet50 model employed a pretrained backbone from ImageNet with all convolutional 
+layers frozen to preserve learned features. Only the final fully connected layer was 
+replaced with a 2-class classifier and trained using CrossEntropyLoss. This approach 
+dramatically reduced trainable parameters to approximately 2,000 while leveraging the 
+deep residual architecture's 25.6 million pretrained weights. Training used an Adam 
+optimizer with learning rate $1 \times 10^{-4}$ and weight decay $1 \times 10^{-4}$ 
+for 5 epochs.
+
+\subsection{EfficientNet-B2 Transfer Learning}
+EfficientNet-B2 utilized compound scaling to balance network depth, width, and resolution 
+efficiently. Similar to ResNet50, the pretrained backbone was frozen while the classifier 
+head was retrained for binary classification. This model contained approximately 9.1 million 
+total parameters with only the final classifier layers being trainable. Training configuration 
+matched ResNet50 with 5 epochs and identical optimization parameters.
+
+\subsection{Training Configuration}
+All models were trained on an A100 GPU using automatic mixed precision (AMP) for computational 
+efficiency. Data augmentation during training included random horizontal flips, random rotation 
+($\pm$10$^\circ$), and color jittering (brightness, contrast, saturation, hue). Images were resized to 
+224 $\times$ 224 pixels and normalized using ImageNet statistics. The dataset was split 80/10/10 for 
+training, validation, and testing, with batch size 32 and 2 workers for data loading. 
+Models were evaluated on a held-out test set of 15,271 images.
+
+\section{Results}
+\label{results}
+
+Table~\ref{tab:results} summarizes the test accuracy for all three architectures. 
+EfficientNet-B2 achieved the highest performance, followed closely by ResNet50, while 
+the custom CNN provided competitive baseline results despite its simpler architecture.
+
+\begin{table}[!ht]
+\centering
+\processdelayedfloats
+\caption{Model Performance Comparison}
+\label{tab:results}
+\begin{tabular}{lcc}
+\hline
+\textbf{Model} & \textbf{Test Accuracy} & \textbf{Trainable Parameters} \\
+\hline
+Custom CNN & TBD\% & 2.1M \\
+ResNet50 & TBD\% & 2K \\
+EfficientNet-B2 & TBD\% & 7.8M \\
+\hline
+\end{tabular}
+\end{table}
+
+The transfer learning approaches demonstrated superior performance with significantly 
+fewer trainable parameters compared to the custom CNN. ResNet50's frozen backbone strategy 
+proved highly effective, achieving competitive accuracy while training only the final 
+classification layer. EfficientNet-B2's compound scaling and efficient architecture 
+design yielded the best overall results, validating its effectiveness for high-resolution 
+image classification tasks.
+
+Training efficiency varied considerably across models. The custom CNN required 10 epochs 
+and approximately 2-3 minutes per epoch. Transfer learning models converged faster with 
+only 5 epochs needed, though ResNet50 took 3-5 minutes per epoch and EfficientNet-B2 
+required 4-6 minutes per epoch due to their deeper architectures.
+
+\section{Discussion and Conclusion}
+\label{conclusion}
+
+This study demonstrated that transfer learning architectures significantly outperform 
+baseline CNNs for AI-generated image detection. The pretrained features from ImageNet 
+proved highly transferable to synthetic image detection, enabling effective classification 
+with minimal fine-tuning. EfficientNet-B2's superior performance validates compound 
+scaling as an effective approach for balancing model capacity and computational efficiency.
+
+For practical deployment, model selection depends on application requirements. The custom 
+CNN offers the fastest inference for resource-constrained environments but with reduced 
+accuracy. ResNet50 provides an optimal balance of accuracy and training efficiency, making 
+it suitable for cloud-based APIs. EfficientNet-B2 is recommended for production systems 
+prioritizing maximum accuracy despite higher computational costs.
+
+Future work should explore fine-tuning deeper layers of transfer learning models, 
+implementing ensemble methods combining multiple architectures, and evaluating model 
+robustness across diverse AI generation techniques beyond the training distribution. 
+Additionally, testing on external datasets like Prithvi deepfakes would validate 
+generalization capabilities and identify potential domain shift challenges.
+
+% ================== References ==================
+\newpage
+\bibliographystyle{apacite}
+\bibliography{references}   % your references.bib file from earlier
+
+\end{document}

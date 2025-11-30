@@ -1,4 +1,4 @@
-# Truth in Pixels - Detecting AI-Generated Images Beyond Faces
+# Truth in Pixels - AI-Generated Image Detection
 
 [![Python](https://img.shields.io/badge/Python-3.8%2B-blue)](https://www.python.org/)
 [![PyTorch](https://img.shields.io/badge/PyTorch-2.0%2B-red)](https://pytorch.org/)
@@ -6,162 +6,146 @@
 
 ## 🎯 Project Overview
 
-This project develops a convolutional neural network (CNN) to classify images as either AI-generated or real. The model is trained on diverse content including people, objects, and scenery, focusing on identifying subtle synthetic cues like distorted hands, unrealistic lighting, and fuzzy backgrounds.
+This project trains and compares multiple deep learning models to classify images as either **AI-generated** or **real**. We implement three approaches:
+1. **Custom CNN** - Baseline convolutional neural network
+2. **ResNet50** - Transfer learning with frozen pretrained backbone
+3. **EfficientNet-B2** - Advanced transfer learning for high-resolution images
+
+The models are trained on diverse content (people, objects, scenery) to identify synthetic cues like distorted features, unrealistic lighting, and artifacts.
 
 ## 📊 Dataset
 
 **AI-Generated-vs-Real-Images-Datasets** from Hugging Face  
 🔗 [Dataset Link](https://huggingface.co/datasets/Hemg/AI-Generated-vs-Real-Images-Datasets)
 
-This dataset includes labeled "real" and "AI-generated" images across multiple categories, suitable for binary image classification tasks.
+- **Classes**: Real (0) and AI-Generated (1)
+- **Split**: 80% train, 10% validation, 10% test
+- **Preprocessing**: Resize to 224×224, ImageNet normalization, augmentation
 
-## 👥 Team Roles & Responsibilities
+## 👥 Team
 
-### 🔍 **Marston Ward - Project Lead & Data Preparation**
-
-- Dataset exploration and visualization
-- Image preprocessing (resize, normalize)
-- Data augmentation strategies
-- Train/validation/test split creation
-- **Primary Notebook**: `01_data_preparation.ipynb`
-- **Platform**: Mac M4 with MPS acceleration
-
-### 🧠 **Victor Salcedo - Model Development** ✅ *Active*
-
-- Baseline CNN architecture design
-- MobileNetV2 transfer learning implementation
-- Training pipeline and hyperparameter tuning
-- Model performance monitoring
-- **Primary Notebook**: `02_model_development.ipynb`
-- **Platform**: Flexible (Mac/Colab)
-
-### 📈 **Jasper Dolar - Evaluation and Reporting** ⏳ *Pending*
-
-- Comprehensive model evaluation
-- Performance metrics calculation
-- Visualization and reporting
-- Results interpretation
-- **Primary Notebook**: `03_evaluation_reporting.ipynb`
-- **Platform**: Google Colab recommended
+- **Marston Ward** - Project Lead, Data Preparation
+- **Victor Salcedo** - Model Development
+- **Jasper Dolar** - Transfer Learning, Evaluation
 
 ## 🚀 Quick Start
 
-### Prerequisites
+### Run on Google Colab (Recommended)
+
+1. Click the "Open in Colab" badge in any notebook
+2. Enable GPU: Runtime → Change runtime type → GPU
+3. Run cells sequentially
+
+### Run Locally
 
 ```bash
-# Mac M4 or local setup
 pip install -r requirements.txt
-
-# Google Colab setup  
-# See notebooks/00_colab_setup.ipynb
+jupyter notebook
 ```
 
-### Usage
+## 📓 Notebooks
 
-1. **Setup Environment**: 
-   - Mac M4: `python3 scripts/setup_cross_platform.py --platform mac_m4`
-   - Colab: Run `notebooks/00_colab_setup.ipynb` first
-2. **Data Preparation**: Run `01_data_preparation.ipynb`
-3. **Model Training**: Run `02_model_development.ipynb`
-4. **Evaluation**: Run `03_evaluation_reporting.ipynb`
+Execute notebooks in order:
 
-## 🖥️ Platform Support
+### 1️⃣ Data Preparation
+**File**: `notebooks/01_data_preparation.ipynb`
 
-### 🍎 Mac M4 (Apple Silicon)
+- Load dataset from Hugging Face
+- Exploratory data analysis (EDA)
+- Define transformations and augmentation
+- Create train/validation/test splits
+- Build PyTorch DataLoaders
 
-- **MPS acceleration** for GPU-like performance
-- **Unified memory** architecture (16-64GB)
-- **Optimized PyTorch** with Apple Silicon support
-- **Setup**: `python3 scripts/setup_cross_platform.py --platform mac_m4`
+### 2️⃣ Model Training  
+**File**: `notebooks/02_model_training.ipynb`
 
-### 🌐 Google Colab 
+- **Custom CNN**: 3 conv layers, batch norm, dropout → `models/cnn_best.pth`
+- **ResNet50**: Frozen backbone, custom classifier → `models/resnet50_best.pth`
+- **EfficientNet-B2**: Transfer learning with scheduler → `models/efficientnet_b2_best.pth`
 
-- **Free GPU access** (T4, 12GB memory)
-- **Colab Pro** (V100/A100, up to 40GB)
-- **Persistent storage** via Google Drive
-- **Setup**: Run `notebooks/00_colab_setup.ipynb`
+All models use:
+- Automatic Mixed Precision (AMP) training
+- Automatic best model saving
+- GPU acceleration (CUDA/MPS/CPU auto-detection)
 
-### 💻 Cross-Platform Features
+### 3️⃣ Evaluation & Comparison
+**File**: `notebooks/03_evaluation_comparison.ipynb`
 
-- **Automatic device detection** (CUDA/MPS/CPU)
-- **Platform-agnostic code** works everywhere
-- **Shared notebooks** compatible across platforms
+- Load all trained models
+- Evaluate on test set
+- Generate confusion matrices
+- Compare accuracy, precision, recall, F1-score
+- Visualize performance metrics
+- Recommendations for deployment
 
 ## 📁 Project Structure
 
 ```bash
-├── data/                          # Dataset storage
-│   ├── raw/                       # Original dataset
-│   ├── processed/                 # Preprocessed data
-│   └── splits/                    # Train/val/test splits
-├── src/                           # Source code modules
-│   ├── __init__.py
-│   ├── data/                      # Data handling
-│   ├── models/                    # Model architectures
+AAI-521-Computer-Vision-Image-Classification-Project/
+├── notebooks/                     # Jupyter notebooks (run in order)
+│   ├── 01_data_preparation.ipynb  # EDA and data loading
+│   ├── 02_model_training.ipynb    # Train all 3 models
+│   └── 03_evaluation_comparison.ipynb  # Compare results
+├── models/                        # Saved model checkpoints
+│   ├── cnn_best.pth              # Best CNN model
+│   ├── resnet50_best.pth         # Best ResNet50 model
+│   └── efficientnet_b2_best.pth  # Best EfficientNet model
+├── results/                       # Output visualizations
 │   ├── utils/                     # Utility functions
 │   └── evaluation/                # Evaluation metrics
 ├── notebooks/                     # Jupyter notebooks
 │   ├── 01_data_preparation.ipynb
 │   ├── 02_model_development.ipynb
 │   └── 03_evaluation_reporting.ipynb
-├── models/                        # Saved model files
-├── results/                       # Output results
-│   ├── figures/                   # Generated plots
-│   ├── metrics/                   # Performance metrics
-│   └── reports/                   # Technical reports
-├── configs/                       # Configuration files
-├── tests/                         # Unit tests
-├── docs/                          # Documentation
-└── scripts/                       # Utility scripts
+├── _archive/                      # Old code (moved from cleanup)
+├── requirements.txt               # Python dependencies
+├── LICENSE                        # MIT License
+└── README.md                      # This file
 ```
 
-## 🎯 Deliverables
-
-- [ ] Three Jupyter notebooks (one per team member)
-- [ ] Trained model files (.pth)
-- [ ] Evaluation visualizations
-- [ ] Technical report (PDF)
-- [ ] Presentation video
-- [ ] Reproducible codebase
-
-## 📊 Key Features
+## 🛠️ Technical Details
 
 ### Model Architectures
 
-- **Baseline CNN**: Custom architecture from scratch
-- **Transfer Learning**: Fine-tuned MobileNetV2
+**Custom CNN**
+- 3 convolutional layers (32, 64, 128 filters)
+- Batch normalization and dropout
+- MaxPooling after each conv block
+- Binary classification output
+
+**ResNet50 Transfer Learning**
+- Pretrained on ImageNet
+- Frozen backbone (feature extraction)
+- Custom fully-connected classifier
+- 5 epochs training
+
+**EfficientNet-B2 Transfer Learning**
+- Advanced compound scaling
+- Better for high-resolution images
+- Learning rate scheduler
+- 5 epochs training
+
+### Training Features
+
+- **Automatic Mixed Precision (AMP)** for faster training
+- **Auto-save best models** based on validation accuracy
+- **GPU acceleration** (CUDA/MPS) with CPU fallback
+- **Data augmentation** (flips, rotations, color jitter)
 
 ### Evaluation Metrics
 
 - Accuracy, Precision, Recall, F1-Score
-- Confusion Matrix
-- ROC Curves and AUC
-- Feature visualization
+- Confusion matrices
+- Classification reports
+- Model comparison visualizations
 
-### Data Augmentation
+## 🎯 Results
 
-- Rotation, flipping, scaling
-- Color jittering
-- Gaussian noise
-- Cutout/mixup techniques
-
-## 🔧 Development Workflow
-
-1. **Setup Environment**: Install dependencies and configure paths
-2. **Data Pipeline**: Download, preprocess, and split data
-3. **Model Development**: Design, train, and validate models
-4. **Evaluation**: Test models and generate reports
-5. **Documentation**: Update README and create technical report
-
-## 📈 Expected Results
-
-- Baseline CNN: Target 85%+ accuracy
-- Transfer Learning: Target 90%+ accuracy
-- Detailed analysis of synthetic image detection patterns
-
-## 🤝 Contributing
-
-Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct and development process.
+After training all three models, you'll have:
+- ✅ Trained model checkpoints in `models/`
+- ✅ Performance comparison across architectures
+- ✅ Confusion matrices for each model
+- ✅ Recommendations for deployment
 
 ## 📄 License
 
@@ -169,13 +153,13 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📚 References
 
-- [Dataset Source](https://huggingface.co/datasets/Hemg/AI-Generated-vs-Real-Images-Datasets)
-- PyTorch Documentation
-- MobileNetV2 Paper: [Sandler et al., 2018](https://arxiv.org/abs/1801.04381)
-
-## 📞 Contact
-
-For questions or collaboration opportunities, please open an issue or contact the team leads.
+- [Hugging Face Dataset](https://huggingface.co/datasets/Hemg/AI-Generated-vs-Real-Images-Datasets)
+- [PyTorch Documentation](https://pytorch.org/docs/)
+- [ResNet Paper](https://arxiv.org/abs/1512.03385) - He et al., 2015
+- [EfficientNet Paper](https://arxiv.org/abs/1905.11946) - Tan & Le, 2019
 
 ---
-"Last Updated: November 2024"
+
+**Last Updated**: November 2025  
+**Course**: AAI-521 Computer Vision  
+**Institution**: University of San Diego

@@ -43,47 +43,50 @@ pip install -r requirements.txt
 jupyter notebook
 ```
 
-## 📓 Notebooks
+## 📓 Main Notebook
 
-Execute notebooks in order:
+**File**: `main_notebook.ipynb` - **Unified workflow from data to results**
 
-### 1️⃣ Data Preparation
-**File**: `notebooks/01_data_preparation.ipynb`
+This single notebook demonstrates the complete ML pipeline:
 
-- Load dataset from Hugging Face
-- Exploratory data analysis (EDA)
-- Define transformations and augmentation
-- Create train/validation/test splits
-- Build PyTorch DataLoaders
+### What's Inside
 
-### 2️⃣ Model Training  
-**File**: `notebooks/02_model_training.ipynb`
+1. **Setup** - Import custom modules from `src/`
+2. **Data Preparation** - Load and split Hugging Face dataset
+3. **EDA** - Visualize class distribution and sample images
+4. **Model 1: Custom CNN** - Train baseline model
+5. **Model 2: ResNet50** - Transfer learning with frozen backbone
+6. **Model 3: EfficientNet-B2** - Advanced transfer learning
+7. **Comparison** - Side-by-side model evaluation
+8. **Conclusion** - Results and recommendations
 
-- **Custom CNN**: 3 conv layers, batch norm, dropout → `models/cnn_best.pth`
-- **ResNet50**: Frozen backbone, custom classifier → `models/resnet50_best.pth`
-- **EfficientNet-B2**: Transfer learning with scheduler → `models/efficientnet_b2_best.pth`
+### Why This Structure?
 
-All models use:
-- Automatic Mixed Precision (AMP) training
-- Automatic best model saving
-- GPU acceleration (CUDA/MPS/CPU auto-detection)
+- **Clean notebook**: Only ~20 cells, focuses on experimentation
+- **Reusable code**: All model logic in `src/` modules
+- **Professional**: Production-ready code organization
+- **Maintainable**: Easy to modify models without touching notebook
 
-### 3️⃣ Evaluation & Comparison
-**File**: `notebooks/03_evaluation_comparison.ipynb`
+### Alternative: Individual Notebooks
 
-- Load all trained models
-- Evaluate on test set
-- Generate confusion matrices
-- Compare accuracy, precision, recall, F1-score
-- Visualize performance metrics
-- Recommendations for deployment
+For step-by-step learning, see `notebooks/`:
+- `01_data_preparation.ipynb` - EDA only
+- `02_model_training.ipynb` - All 3 models
+- `03_evaluation_comparison.ipynb` - Results comparison
 
 ## 📁 Project Structure
 
 ```bash
 AAI-521-Computer-Vision-Image-Classification-Project/
-├── notebooks/                     # Jupyter notebooks (run in order)
-│   ├── 01_data_preparation.ipynb  # EDA and data loading
+├── main_notebook.ipynb            # 🌟 MAIN: Unified workflow notebook
+├── src/                           # Python modules (imported by notebook)
+│   ├── __init__.py
+│   ├── models.py                  # CNN, ResNet50, EfficientNet architectures
+│   ├── data.py                    # Data loading and preprocessing
+│   ├── training.py                # Trainer class with AMP support
+│   └── visualization.py           # Plotting and evaluation utils
+├── notebooks/                     # Alternative: Step-by-step notebooks
+│   ├── 01_data_preparation.ipynb  # EDA only
 │   ├── 02_model_training.ipynb    # Train all 3 models
 │   └── 03_evaluation_comparison.ipynb  # Compare results
 ├── models/                        # Saved model checkpoints

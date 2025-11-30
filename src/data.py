@@ -99,8 +99,8 @@ def prepare_data(dataset_name="Hemg/AI-Generated-vs-Real-Images-Datasets",
     Returns:
         tuple: (train_images, train_labels, val_images, val_labels, test_images, test_labels)
     """
-    # Load dataset
-    dataset = load_dataset(dataset_name)
+    # Load dataset (without authentication - public dataset)
+    dataset = load_dataset(dataset_name, token=False)
     
     # Extract images and labels
     images = [x['image'] for x in dataset['train']]

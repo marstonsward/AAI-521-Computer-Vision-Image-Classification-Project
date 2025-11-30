@@ -36,7 +36,7 @@ class Trainer:
         
         # Initialize AMP scaler if using CUDA
         if use_amp and device.type == 'cuda':
-            self.scaler = torch.cuda.amp.GradScaler()
+            self.scaler = torch.amp.GradScaler('cuda')
         else:
             self.scaler = None
         
@@ -51,14 +51,17 @@ class Trainer:
         self.best_val_acc = 0.0
         self.best_model_wts = None
     
-    def train_epoch(self, dataloader):
+    def train_epoch(self, dataloader, verbose=True):
         """Train for one epoch."""
         self.model.train()
         running_loss = 0.0
         running_corrects = 0
         total = 0
         
-        for images, labels in dataloader:
+        num_batches = len(dataloader)
+        print_every = max(num_batches // 10, 100)  # Print 10 times per epoch or every 100 batches
+        
+        for batch_idx, (images, labels) in enumerate(dataloader):
             images = images.to(self.device, non_blocking=True)
             labels = labels.to(self.device, non_blocking=True)
             
@@ -66,7 +69,7 @@ class Trainer:
             
             # Forward pass with AMP
             if self.scaler is not None:
-                with torch.cuda.amp.autocast():
+                with torch.amp.autocast('cuda'):
                     outputs = self.model(images)
                     # Handle BCE loss: convert labels to float and match output shape
                     if outputs.dim() == 2 and outputs.size(1) == 1:
@@ -104,6 +107,12 @@ class Trainer:
             running_loss += loss.item() * batch_size
             running_corrects += torch.sum(preds == labels).item()
             total += batch_size
+            
+            # Print progress every N batches
+            if verbose and (batch_idx + 1) % print_every == 0:
+                batch_acc = running_corrects / total
+                avg_loss = running_loss / total
+                print(f"  [{batch_idx+1:4d}/{num_batches}] Loss: {avg_loss:.4f} | Acc: {batch_acc:.4f}")
         
         epoch_loss = running_loss / total
         epoch_acc = running_corrects / total
@@ -171,7 +180,7 @@ class Trainer:
                 print("-" * 40)
             
             # Train
-            train_loss, train_acc = self.train_epoch(train_loader)
+            train_loss, train_acc = self.train_epoch(train_loader, verbose=verbose)
             self.history['train_loss'].append(train_loss)
             self.history['train_acc'].append(train_acc)
             

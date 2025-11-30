@@ -86,7 +86,8 @@ def get_transforms(img_size=224, augment=True):
 def prepare_data(dataset_name="Hemg/AI-Generated-vs-Real-Images-Datasets",
                  train_ratio=0.8,
                  val_ratio=0.1,
-                 seed=42):
+                 seed=42,
+                 cache_dir="/root/.cache/huggingface/datasets"):
     """
     Load and split Hugging Face dataset.
     
@@ -95,15 +96,23 @@ def prepare_data(dataset_name="Hemg/AI-Generated-vs-Real-Images-Datasets",
         train_ratio (float): Proportion for training (default: 0.8)
         val_ratio (float): Proportion for validation (default: 0.1)
         seed (int): Random seed for reproducibility (default: 42)
+        cache_dir (str): Directory to cache downloaded dataset (default: HF default)
     
     Returns:
         tuple: (train_images, train_labels, val_images, val_labels, test_images, test_labels)
     """
-    # Load dataset (without authentication - public dataset)
-    print(f"📦 Downloading dataset '{dataset_name}'...")
-    print("   ⏳ First run: ~2-3 min download, then cached (~10-20 sec)")
+    import os
     
-    dataset = load_dataset(dataset_name, token=False)
+    # Check if dataset is already cached
+    cache_exists = os.path.exists(cache_dir) and any(dataset_name.replace('/', '___') in d for d in os.listdir(cache_dir) if os.path.isdir(os.path.join(cache_dir, d)))
+    
+    if cache_exists:
+        print(f"📦 Loading cached dataset '{dataset_name}'...")
+    else:
+        print(f"📦 Downloading dataset '{dataset_name}'...")
+        print("   ⏳ First download: ~2-3 min, then cached for future runs")
+    
+    dataset = load_dataset(dataset_name, token=False, cache_dir=cache_dir)
     print(f"✅ Dataset loaded: {len(dataset['train']):,} total images")
     
     # Extract images and labels (fast - just references)

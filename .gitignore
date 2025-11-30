@@ -54,3 +54,6 @@ mlruns/
 *.pdf
 *.ttt
 *.fff
+
+# Exception: include the final report PDF
+!src/report/main.pdf

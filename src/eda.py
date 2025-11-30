@@ -130,7 +130,8 @@ def visualize_samples(images, labels, class_names=['Real', 'AI-Generated'],
 
 def visualize_batch(dataloader, class_names=['Real', 'AI-Generated'],
                    n_images=8, denormalize=True, 
-                   mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]):
+                   mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225],
+                   title='Sample Batch'):
     """
     Visualize a batch of images from a DataLoader.
     
@@ -141,6 +142,7 @@ def visualize_batch(dataloader, class_names=['Real', 'AI-Generated'],
         denormalize (bool): Whether to denormalize images
         mean (list): Mean values for denormalization
         std (list): Std values for denormalization
+        title (str): Title for the plot
     """
     # Get one batch
     dataiter = iter(dataloader)
@@ -175,7 +177,7 @@ def visualize_batch(dataloader, class_names=['Real', 'AI-Generated'],
         else:
             axes[i].axis('off')
     
-    plt.suptitle('Sample Training Batch (After Augmentation)', 
+    plt.suptitle(title, 
                 fontsize=16, fontweight='bold', y=1.02)
     plt.tight_layout()
     plt.show()

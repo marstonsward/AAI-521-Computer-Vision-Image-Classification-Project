@@ -101,28 +101,15 @@ def prepare_data(dataset_name="Hemg/AI-Generated-vs-Real-Images-Datasets",
     """
     # Load dataset (without authentication - public dataset)
     print(f"📦 Downloading dataset '{dataset_name}'...")
-    print("   ⏳ First run may take 1-3 minutes, then cached")
-    print("   💡 Progress bars will appear below...")
+    print("   ⏳ First run: ~2-3 min download, then cached (~10-20 sec)")
     
     dataset = load_dataset(dataset_name, token=False)
-    print(f"\n✅ Dataset loaded: {len(dataset['train']):,} total images")
+    print(f"✅ Dataset loaded: {len(dataset['train']):,} total images")
     
-    # Extract images and labels with progress
-    print("🔄 Extracting images and labels...")
-    total = len(dataset['train'])
-    images = []
-    labels = []
-    
-    for i, item in enumerate(dataset['train']):
-        images.append(item['image'])
-        labels.append(item['label'])
-        
-        # Print progress every 10%
-        if (i + 1) % (total // 10) == 0 or (i + 1) == total:
-            progress = ((i + 1) / total) * 100
-            print(f"   Progress: {i+1:,}/{total:,} ({progress:.0f}%)")
-    
-    print("✅ Extraction complete")
+    # Extract images and labels (fast - just references)
+    print("🔄 Preparing data splits...")
+    images = [x['image'] for x in dataset['train']]
+    labels = [x['label'] for x in dataset['train']]
     
     # Shuffle with seed
     random.seed(seed)

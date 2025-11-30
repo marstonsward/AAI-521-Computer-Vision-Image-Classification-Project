@@ -68,7 +68,12 @@ class Trainer:
             if self.scaler is not None:
                 with torch.cuda.amp.autocast():
                     outputs = self.model(images)
-                    loss = self.criterion(outputs, labels)
+                    # Handle BCE loss: convert labels to float and match output shape
+                    if outputs.dim() == 2 and outputs.size(1) == 1:
+                        labels_for_loss = labels.float().unsqueeze(1)
+                    else:
+                        labels_for_loss = labels
+                    loss = self.criterion(outputs, labels_for_loss)
                 
                 # Backward pass with scaler
                 self.scaler.scale(loss).backward()
@@ -76,7 +81,12 @@ class Trainer:
                 self.scaler.update()
             else:
                 outputs = self.model(images)
-                loss = self.criterion(outputs, labels)
+                # Handle BCE loss: convert labels to float and match output shape
+                if outputs.dim() == 2 and outputs.size(1) == 1:
+                    labels_for_loss = labels.float().unsqueeze(1)
+                else:
+                    labels_for_loss = labels
+                loss = self.criterion(outputs, labels_for_loss)
                 loss.backward()
                 self.optimizer.step()
             
@@ -113,7 +123,12 @@ class Trainer:
                 labels = labels.to(self.device, non_blocking=True)
                 
                 outputs = self.model(images)
-                loss = self.criterion(outputs, labels)
+                # Handle BCE loss: convert labels to float and match output shape
+                if outputs.dim() == 2 and outputs.size(1) == 1:
+                    labels_for_loss = labels.float().unsqueeze(1)
+                else:
+                    labels_for_loss = labels
+                loss = self.criterion(outputs, labels_for_loss)
                 
                 batch_size = labels.size(0)
                 

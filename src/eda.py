@@ -8,61 +8,6 @@ import random
 import numpy as np
 import matplotlib.pyplot as plt
 from collections import Counter
-from torchvision import transforms
-
-
-# ========================================
-# Feature Engineering: Image Transforms
-# ========================================
-
-def get_image_transforms(height=224, width=224, 
-                        mean=[0.485, 0.456, 0.406],
-                        std=[0.229, 0.224, 0.225]):
-    """
-    Create image transformation pipelines for training and validation/test sets.
-    
-    These transforms apply to both CNN and transfer learning models (ResNet, EfficientNet).
-    The default mean and std values are ImageNet statistics.
-    
-    Args:
-        height (int): Target image height (default: 224)
-        width (int): Target image width (default: 224)
-        mean (list): Normalization mean for RGB channels (default: ImageNet stats)
-        std (list): Normalization std for RGB channels (default: ImageNet stats)
-    
-    Returns:
-        tuple: (train_transforms, val_transforms)
-            - train_transforms: Transformations with augmentation for training
-            - val_transforms: Transformations without augmentation for validation/test
-    """
-    # Training set transformations: resize, augment, normalize
-    train_transforms = transforms.Compose([
-        transforms.Resize((height, width)),      # standard input size
-        transforms.Lambda(lambda image: image.convert("RGB")),  # Ensure 3 channels
-        transforms.RandomHorizontalFlip(p=0.5),  # flip for variation
-        transforms.RandomRotation(10),           # small rotations
-        transforms.ColorJitter(brightness=0.1,
-                               contrast=0.1,
-                               saturation=0.1,
-                               hue=0.05),        # small color shifts
-        transforms.ToTensor(),                   # convert to tensor, scales [0,1]
-        transforms.Normalize(mean=mean, std=std)  # normalize RGB channels
-    ])
-    
-    # Validation / Test set transformations: resize + normalize (no augmentation)
-    val_transforms = transforms.Compose([
-        transforms.Resize((height, width)),
-        transforms.Lambda(lambda image: image.convert("RGB")),  # Ensure 3 channels
-        transforms.ToTensor(),
-        transforms.Normalize(mean=mean, std=std)
-    ])
-    
-    return train_transforms, val_transforms
-
-
-# ========================================
-# Visualization Functions
-# ========================================
 
 
 def analyze_class_distribution(labels, class_names=['Real', 'AI-Generated']):

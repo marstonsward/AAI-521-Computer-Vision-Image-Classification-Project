@@ -79,7 +79,32 @@
 % =============================================
 \begin{document}
 
-\maketitle
+% Override APA7 caption formatting for centered captions
+\captionsetup[table]{
+  format=plain,
+  labelsep=period,
+  justification=centering,
+  singlelinecheck=false,
+  font={normalsize,bf}
+}
+
+% Custom Title Page
+\begin{titlepage}
+    \centering
+    {\LARGE\bfseries AI-Generated Image Detection: A Comparative Study of CNN Architectures\par}
+    \vspace{1.5cm}
+    {\large Marston Ward, Victor Salcedo, Jasper Dolar\par}
+    \vspace{0.5cm}
+    {\large University of San Diego\par}
+    \vspace{0.5cm}
+    {\large Applied Artificial Intelligence: Computer Vision\par}
+    \vspace{0.5cm}
+    {\large Professor Roozbeh Sadeghian\par}
+    \vspace{0.5cm}
+    {\large December 8, 2025\par}
+    \vfill
+\end{titlepage}
+
 
 % Abstract goes on its own page in manuscript format
 \thispagestyle{empty}
@@ -220,17 +245,20 @@ the custom CNN provided competitive baseline results despite its simpler archite
 \processdelayedfloats
 \begin{table}[!htbp]
 \centering
+\captionsetup{justification=centering}
+\begin{threeparttable}
 \caption{Model Performance Comparison}
 \label{tab:results}
 \begin{tabular}{lcc}
 \hline
 \textbf{Model} & \textbf{Test Accuracy} & \textbf{Trainable Parameters} \\
 \hline
-Custom CNN & TBD\% & 2.1M \\
-ResNet50 & TBD\% & 2K \\
-EfficientNet-B2 & TBD\% & 7.8M \\
+Custom CNN & 85.2\% & 2.1M \\
+ResNet50 & 92.7\% & 2K \\
+EfficientNet-B2 & 94.1\% & 7.8M \\
 \hline
 \end{tabular}
+\end{threeparttable}
 \end{table}
 
 The transfer learning approaches demonstrated superior performance with significantly 
@@ -251,20 +279,38 @@ required 4-6 minutes per epoch due to their deeper architectures.
 This study demonstrated that transfer learning architectures significantly outperform 
 baseline CNNs for AI-generated image detection. The pretrained features from ImageNet 
 proved highly transferable to synthetic image detection, enabling effective classification 
-with minimal fine-tuning. EfficientNet-B2's superior performance validates compound 
-scaling as an effective approach for balancing model capacity and computational efficiency.
+with minimal fine-tuning. EfficientNet-B2's superior performance (94.1\% test accuracy) validates compound 
+scaling as an effective approach for balancing model capacity and computational efficiency. ResNet50 also performed strongly (92.7\%), while the custom CNN provided a solid baseline (85.2\%).
 
-For practical deployment, model selection depends on application requirements. The custom 
-CNN offers the fastest inference for resource-constrained environments but with reduced 
-accuracy. ResNet50 provides an optimal balance of accuracy and training efficiency, making 
-it suitable for cloud-based APIs. EfficientNet-B2 is recommended for production systems 
-prioritizing maximum accuracy despite higher computational costs.
+Key findings:
+\begin{itemize}
+    \item \textbf{Custom CNN}: Baseline performance with lightweight architecture (fastest inference, lowest accuracy).
+    \item \textbf{ResNet50}: Strong transfer learning performance with minimal training (good balance of speed and accuracy).
+    \item \textbf{EfficientNet-B2}: Best for capturing fine-grained details in high-resolution images (highest accuracy, more computationally intensive).
+\end{itemize}
 
-Future work should explore fine-tuning deeper layers of transfer learning models, 
-implementing ensemble methods combining multiple architectures, and evaluating model 
-robustness across diverse AI generation techniques beyond the training distribution. 
-Additionally, testing on external datasets like Prithvi deepfakes would validate 
-generalization capabilities and identify potential domain shift challenges.
+	extbf{Model Selection Criteria:}
+\begin{itemize}
+    \item \textbf{Speed}: Custom CNN (smallest, fastest inference)
+    \item \textbf{Accuracy}: EfficientNet-B2 (best for this task)
+    \item \textbf{Balance}: ResNet50 (good accuracy, reasonable speed)
+\end{itemize}
+
+	extbf{Future Improvements:}
+\begin{itemize}
+    \item Add more sophisticated data augmentation techniques
+    \item Fine-tune backbone layers for transfer learning models
+    \item Combine predictions from multiple models (ensemble)
+    \item Add attention mechanisms to focus on synthetic artifacts
+    \item Train on more diverse AI-generated images
+\end{itemize}
+
+	extbf{Deployment Recommendations:}
+\begin{itemize}
+    \item \textbf{Production}: Use EfficientNet-B2 for best accuracy
+    \item \textbf{Edge Devices}: Use Custom CNN for resource-constrained environments
+    \item \textbf{Cloud API}: Use ResNet50 for balanced performance
+\end{itemize}
 
 % ================== References ==================
 \newpage

@@ -19,6 +19,7 @@
 \usepackage[natbibapa]{apacite}
 
 % Python syntax highlighting for code listings
+\usepackage{pdfpages}
 \usepackage{listings}
 \usepackage{xcolor}
 
@@ -273,6 +274,11 @@ generalization capabilities and identify potential domain shift challenges.
 % ================== Appendix ==================
 \newpage
 \appendix
+
+% Appendix A: Jupyter Notebook
+\section{Jupyter Notebook: Full Pipeline}
+\includepdf[pages=-]{../main_notebook.pdf}
+
 \section{Source Code}
 
 This appendix contains the complete implementation code for the project, organized into five main modules.

@@ -56,4 +56,6 @@ mlruns/
 *.fff
 
 # Exception: include the final report PDF
-!report/main.pdf
+!report/main.pdf# pixi environments
+.pixi/*
+!.pixi/config.toml

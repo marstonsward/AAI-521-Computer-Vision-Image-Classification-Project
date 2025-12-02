@@ -14,6 +14,7 @@
 
 % Nice URLs and clickable links (without colored boxes)
 \usepackage{url}
+\usepackage[hidelinks]{hyperref}
 
 % APA citations - natbib mode for \citep command
 \usepackage[natbibapa]{apacite}
@@ -282,21 +283,21 @@ proved highly transferable to synthetic image detection, enabling effective clas
 with minimal fine-tuning. EfficientNet-B2's superior performance (94.1\% test accuracy) validates compound 
 scaling as an effective approach for balancing model capacity and computational efficiency. ResNet50 also performed strongly (92.7\%), while the custom CNN provided a solid baseline (85.2\%).
 
-Key findings:
+\textbf{Key findings:}
 \begin{itemize}
     \item \textbf{Custom CNN}: Baseline performance with lightweight architecture (fastest inference, lowest accuracy).
     \item \textbf{ResNet50}: Strong transfer learning performance with minimal training (good balance of speed and accuracy).
     \item \textbf{EfficientNet-B2}: Best for capturing fine-grained details in high-resolution images (highest accuracy, more computationally intensive).
 \end{itemize}
 
-	extbf{Model Selection Criteria:}
+\textbf{Model Selection Criteria:}
 \begin{itemize}
     \item \textbf{Speed}: Custom CNN (smallest, fastest inference)
     \item \textbf{Accuracy}: EfficientNet-B2 (best for this task)
     \item \textbf{Balance}: ResNet50 (good accuracy, reasonable speed)
 \end{itemize}
 
-	extbf{Future Improvements:}
+\textbf{Future Improvements:}
 \begin{itemize}
     \item Add more sophisticated data augmentation techniques
     \item Fine-tune backbone layers for transfer learning models
@@ -305,7 +306,7 @@ Key findings:
     \item Train on more diverse AI-generated images
 \end{itemize}
 
-	extbf{Deployment Recommendations:}
+\textbf{Deployment Recommendations:}
 \begin{itemize}
     \item \textbf{Production}: Use EfficientNet-B2 for best accuracy
     \item \textbf{Edge Devices}: Use Custom CNN for resource-constrained environments

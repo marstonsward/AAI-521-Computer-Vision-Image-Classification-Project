@@ -60,7 +60,7 @@
 \authorsnames{Marston Ward, Victor Salcedo, Jasper Dolar}
 \authorsaffiliations{{University of San Diego}}
 
-\course{Applied Artificial Intelligence: Computer Vision}
+\course{Applied Artificial Intelligence: Computer Vision (Group 3)}
 \professor{Professor Roozbeh Sadeghian}
 \duedate{December 8, 2025}
 
@@ -103,6 +103,8 @@
     {\large University of San Diego\par}
     \vspace{0.5cm}
     {\large Applied Artificial Intelligence: Computer Vision\par}
+    \vspace{0.3cm}
+    {\large Group 3\par}
     \vspace{0.5cm}
     {\large Professor Roozbeh Sadeghian\par}
     \vspace{0.5cm}
@@ -247,22 +249,52 @@ Table~\ref{tab:results} summarizes the test accuracy for all three architectures
 Surprisingly, the Custom CNN achieved the highest performance at 90.3\%, significantly 
 outperforming both transfer learning approaches. ResNet50 achieved 80.3\% accuracy, 
 while EfficientNet-B2 reached 74.1\%. Training history curves for all three models 
-are presented in the appendix notebook (Figures 1-3), showing convergence patterns 
+are presented in the appendix notebook as ``Custom CNN Training History,'' ``ResNet50 
+Training History,'' and ``EfficientNet-B2 Training History,'' showing convergence patterns 
 and validation performance throughout training.
 
-\subsection{Detailed Performance Analysis}
-The complete experimental results are documented in Appendix A (Jupyter Notebook), which 
-includes training history plots, confusion matrices, and classification reports for each 
-model. The Custom CNN training history (Appendix Figure 1) shows steady convergence over 
-10 epochs, with validation accuracy reaching 89.8\% and final test accuracy of 90.3\%. 
-The confusion matrix reveals balanced performance: 7,266 true positives (Real) and 6,520 
-true positives (AI-Generated), with relatively low false positive (795) and false negative 
-(690) rates.
+\subsection{Training History Analysis}
+The complete experimental results are documented in Appendix A (Jupyter Notebook). Each 
+model's training history plot displays training and validation loss alongside training and 
+validation accuracy curves across epochs. The ``Custom CNN Training History'' figure shows 
+steady convergence over 10 epochs, with both loss curves decreasing smoothly and accuracy 
+curves rising consistently. Training loss decreased from approximately 0.4 to 0.15, while 
+validation loss dropped from 0.35 to 0.25. Training accuracy improved from 82\% to 94\%, 
+with validation accuracy reaching 89.8\% and final test accuracy of 90.3\%. The minimal 
+gap between training and validation curves indicates good generalization without significant 
+overfitting.
 
-ResNet50 and EfficientNet-B2 training curves (Appendix Figures 2-3) show faster initial 
-convergence due to pretrained weights, but plateaued at lower final accuracies. The model 
-comparison bar chart (Appendix Figure 4) visually demonstrates the 10\% performance gap 
-between the Custom CNN and the second-best model.
+The ``ResNet50 Training History'' figure reveals faster initial convergence in the first 
+2-3 epochs due to pretrained ImageNet weights, with loss decreasing rapidly early in training. 
+However, both loss and accuracy curves plateaued after epoch 3, suggesting the frozen backbone 
+limited the model's ability to adapt to synthetic image features. Final training accuracy 
+reached 85\%, but validation accuracy stagnated at 80\%, with test accuracy of 80.3\%.
+
+Similarly, the ``EfficientNet-B2 Training History'' demonstrates quick early convergence but 
+more pronounced plateauing than ResNet50. Despite EfficientNet-B2's sophisticated architecture, 
+the frozen pretrained features struggled to transfer effectively to this domain. Validation 
+accuracy peaked at 74\% by epoch 2 and showed minimal improvement thereafter, ultimately 
+achieving only 74.1\% test accuracy.
+
+\subsection{Confusion Matrix Analysis}
+The confusion matrices provide detailed insight into each model's classification behavior. 
+The ``CNN Confusion Matrix'' reveals balanced performance with 7,266 true positives for Real 
+images and 6,520 true positives for AI-Generated images. False positives (Real misclassified 
+as AI-Generated) totaled 795, while false negatives (AI-Generated misclassified as Real) 
+numbered 690. This relatively symmetric error distribution indicates the Custom CNN learned 
+distinguishing features for both classes equally well.
+
+The ``ResNet50 Confusion Matrix'' shows more imbalanced performance, with higher misclassification 
+rates particularly for AI-Generated images. The model demonstrated a tendency to over-predict 
+the Real class, suggesting the pretrained ImageNet features biased predictions toward natural 
+photographs. This aligns with the hypothesis that frozen backbones trained on natural images 
+may not capture synthetic image artifacts effectively.
+
+The ``EfficientNet-B2 Confusion Matrix'' exhibits the poorest balance, with substantial 
+confusion between classes and the highest overall error rates among the three models. Despite 
+EfficientNet-B2's proven performance on ImageNet, the frozen architecture struggled significantly 
+with this binary synthetic detection task, further supporting the conclusion that task-specific 
+architectures may outperform transfer learning when domain shift is substantial.
 
 \processdelayedfloats
 \begin{table}[!htbp]
@@ -287,17 +319,17 @@ Contrary to expectations, the Custom CNN from scratch outperformed both transfer
 approaches. Despite having 2.1M trainable parameters compared to ResNet50's 2K, the Custom CNN 
 achieved 90.3\% test accuracy. The transfer learning models may have been limited by their 
 frozen backbones, which were pretrained on natural ImageNet photographs rather than synthetic 
-images. The confusion matrices (Appendix Figures) reveal that the Custom CNN achieved better 
+images. As detailed in the confusion matrix analysis above, the Custom CNN achieved better 
 balance between precision (0.91 for Real, 0.89 for AI-Generated) and recall (0.90 for both 
 classes), with strong F1-scores of 0.91 and 0.90 respectively.
 
 Training efficiency varied considerably across models. The Custom CNN required 10 epochs 
-and approximately 2-3 minutes per epoch, achieving steady improvement as shown in the training 
-history curves (Appendix Figure 1). Transfer learning models trained for only 5 epochs, with 
+and approximately 2-3 minutes per epoch, achieving steady improvement as documented in the 
+``Custom CNN Training History'' figure. Transfer learning models trained for only 5 epochs, with 
 ResNet50 taking 3-5 minutes per epoch and EfficientNet-B2 requiring 4-6 minutes per epoch. 
 However, the longer training time for the Custom CNN was justified by its superior final 
-performance. The model comparison bar chart (Appendix Figure 4) clearly illustrates the 
-performance gap between the three approaches.
+performance, with the training curves showing continuous improvement rather than early 
+plateauing observed in transfer learning approaches.
 
 \section{Discussion and Conclusion}
 \label{conclusion}
@@ -358,6 +390,7 @@ the advantages of pretrained features.
 \section{Source Code}
 
 This appendix contains the complete implementation code for the project, organized into five main modules.
+Model, EDA, training and evaluation modules were abstracted out for clarity. They are imported into the main notebook for use and are included in the appendix for reference.
 
 \subsection{Data Loading Module (data.py)}
 
@@ -579,7 +612,7 @@ def create_dataloaders(train_images, train_labels,
 
 \begin{lstlisting}[style=pythonstyle]
 """
-Model architectures for AI-generated image detection.
+Model architectures for AI-generated image detection. 
 
 Contains:
 - CustomCNN: Baseline CNN with 3 conv layers

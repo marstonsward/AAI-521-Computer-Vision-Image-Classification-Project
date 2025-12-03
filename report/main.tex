@@ -69,12 +69,14 @@
   This study evaluates three deep learning architectures for detecting AI-generated images: 
   a custom convolutional neural network (CNN), ResNet50, and EfficientNet-B2. Using a 
   dataset of 152,710 images from Hugging Face, we trained and compared these models to 
-  identify synthetic visual content. The custom CNN served as a baseline, while ResNet50 
-  and EfficientNet-B2 employed transfer learning with frozen pretrained backbones. Results 
-  demonstrate that transfer learning architectures significantly outperform the baseline 
-  CNN, with EfficientNet-B2 achieving the highest test accuracy. This work provides practical 
-  insights into model selection for deepfake detection applications, balancing accuracy, 
-  computational efficiency, and deployment considerations.
+  identify synthetic visual content. The custom CNN served as a baseline trained from 
+  scratch, while ResNet50 and EfficientNet-B2 employed transfer learning with frozen 
+  pretrained backbones. Results reveal that the task-specific Custom CNN achieved the 
+  highest test accuracy at 90.3\%, outperforming ResNet50 (80.3\%) and EfficientNet-B2 
+  (74.1\%). This unexpected outcome suggests that pretrained ImageNet features may not 
+  optimally transfer to synthetic image detection without backbone fine-tuning, and that 
+  longer training with task-specific architectures can yield superior results for this 
+  binary classification problem.
 }
 
 \keywords{deepfake detection, AI-generated images, convolutional neural networks, transfer learning, ResNet50, EfficientNet}
@@ -242,8 +244,25 @@ Models were evaluated on a held-out test set of 15,271 images.
 \label{results}
 
 Table~\ref{tab:results} summarizes the test accuracy for all three architectures. 
-EfficientNet-B2 achieved the highest performance, followed closely by ResNet50, while 
-the custom CNN provided competitive baseline results despite its simpler architecture.
+Surprisingly, the Custom CNN achieved the highest performance at 90.3\%, significantly 
+outperforming both transfer learning approaches. ResNet50 achieved 80.3\% accuracy, 
+while EfficientNet-B2 reached 74.1\%. Training history curves for all three models 
+are presented in the appendix notebook (Figures 1-3), showing convergence patterns 
+and validation performance throughout training.
+
+\subsection{Detailed Performance Analysis}
+The complete experimental results are documented in Appendix A (Jupyter Notebook), which 
+includes training history plots, confusion matrices, and classification reports for each 
+model. The Custom CNN training history (Appendix Figure 1) shows steady convergence over 
+10 epochs, with validation accuracy reaching 89.8\% and final test accuracy of 90.3\%. 
+The confusion matrix reveals balanced performance: 7,266 true positives (Real) and 6,520 
+true positives (AI-Generated), with relatively low false positive (795) and false negative 
+(690) rates.
+
+ResNet50 and EfficientNet-B2 training curves (Appendix Figures 2-3) show faster initial 
+convergence due to pretrained weights, but plateaued at lower final accuracies. The model 
+comparison bar chart (Appendix Figure 4) visually demonstrates the 10\% performance gap 
+between the Custom CNN and the second-best model.
 
 \processdelayedfloats
 \begin{table}[!htbp]
@@ -256,40 +275,47 @@ the custom CNN provided competitive baseline results despite its simpler archite
 \hline
 \textbf{Model} & \textbf{Test Accuracy} & \textbf{Trainable Parameters} \\
 \hline
-Custom CNN & 85.2\% & 2.1M \\
-ResNet50 & 92.7\% & 2K \\
-EfficientNet-B2 & 94.1\% & 7.8M \\
+Custom CNN & 90.3\% & 2.1M \\
+ResNet50 & 80.3\% & 2K \\
+EfficientNet-B2 & 74.1\% & 7.8M \\
 \hline
 \end{tabular}
 \end{threeparttable}
 \end{table}
 
-The transfer learning approaches demonstrated superior performance with significantly 
-fewer trainable parameters compared to the custom CNN. ResNet50's frozen backbone strategy 
-proved highly effective, achieving competitive accuracy while training only the final 
-classification layer. EfficientNet-B2's compound scaling and efficient architecture 
-design yielded the best overall results, validating its effectiveness for high-resolution 
-image classification tasks.
+Contrary to expectations, the Custom CNN from scratch outperformed both transfer learning 
+approaches. Despite having 2.1M trainable parameters compared to ResNet50's 2K, the Custom CNN 
+achieved 90.3\% test accuracy. The transfer learning models may have been limited by their 
+frozen backbones, which were pretrained on natural ImageNet photographs rather than synthetic 
+images. The confusion matrices (Appendix Figures) reveal that the Custom CNN achieved better 
+balance between precision (0.91 for Real, 0.89 for AI-Generated) and recall (0.90 for both 
+classes), with strong F1-scores of 0.91 and 0.90 respectively.
 
-Training efficiency varied considerably across models. The custom CNN required 10 epochs 
-and approximately 2-3 minutes per epoch. Transfer learning models converged faster with 
-only 5 epochs needed, though ResNet50 took 3-5 minutes per epoch and EfficientNet-B2 
-required 4-6 minutes per epoch due to their deeper architectures.
+Training efficiency varied considerably across models. The Custom CNN required 10 epochs 
+and approximately 2-3 minutes per epoch, achieving steady improvement as shown in the training 
+history curves (Appendix Figure 1). Transfer learning models trained for only 5 epochs, with 
+ResNet50 taking 3-5 minutes per epoch and EfficientNet-B2 requiring 4-6 minutes per epoch. 
+However, the longer training time for the Custom CNN was justified by its superior final 
+performance. The model comparison bar chart (Appendix Figure 4) clearly illustrates the 
+performance gap between the three approaches.
 
 \section{Discussion and Conclusion}
 \label{conclusion}
 
-This study demonstrated that transfer learning architectures significantly outperform 
-baseline CNNs for AI-generated image detection. The pretrained features from ImageNet 
-proved highly transferable to synthetic image detection, enabling effective classification 
-with minimal fine-tuning. EfficientNet-B2's superior performance (94.1\% test accuracy) validates compound 
-scaling as an effective approach for balancing model capacity and computational efficiency. ResNet50 also performed strongly (92.7\%), while the custom CNN provided a solid baseline (85.2\%).
+This study revealed unexpected results: a task-specific Custom CNN trained from scratch 
+outperformed pretrained transfer learning architectures for AI-generated image detection. 
+The Custom CNN achieved 90.3\% test accuracy, substantially exceeding ResNet50 (80.3\%) and 
+EfficientNet-B2 (74.1\%). This suggests that ImageNet features, while powerful for natural 
+images, may not optimally transfer to synthetic image detection without fine-tuning the 
+backbone layers. The Custom CNN's success indicates that training longer (10 vs 5 epochs) 
+with architecture designed specifically for this binary classification task can outweigh 
+the advantages of pretrained features.
 
 \textbf{Key findings:}
 \begin{itemize}
-    \item \textbf{Custom CNN}: Baseline performance with lightweight architecture (fastest inference, lowest accuracy).
-    \item \textbf{ResNet50}: Strong transfer learning performance with minimal training (good balance of speed and accuracy).
-    \item \textbf{EfficientNet-B2}: Best for capturing fine-grained details in high-resolution images (highest accuracy, more computationally intensive).
+    \item \textbf{Custom CNN}: Achieved highest test accuracy (90.3\%) with task-specific architecture trained for 10 epochs.
+    \item \textbf{ResNet50}: Moderate performance (80.3\%) with frozen backbone - may benefit from fine-tuning.
+    \item \textbf{EfficientNet-B2}: Lowest performance (74.1\%) - frozen pretrained features may not transfer well to synthetic images.
 \end{itemize}
 
 \textbf{Model Selection Criteria:}
@@ -301,18 +327,19 @@ scaling as an effective approach for balancing model capacity and computational 
 
 \textbf{Future Improvements:}
 \begin{itemize}
-    \item Add more sophisticated data augmentation techniques
-    \item Fine-tune backbone layers for transfer learning models
-    \item Combine predictions from multiple models (ensemble)
-    \item Add attention mechanisms to focus on synthetic artifacts
-    \item Train on more diverse AI-generated images
+    \item Fine-tune transfer learning backbone layers (currently frozen) to adapt pretrained features to synthetic images
+    \item Train transfer learning models for more epochs to match Custom CNN training duration
+    \item Experiment with hybrid architectures combining custom layers with pretrained blocks
+    \item Add attention mechanisms to the Custom CNN to focus on synthetic artifacts
+    \item Implement ensemble methods combining all three models for improved accuracy
+    \item Expand dataset with more diverse AI generation methods (Stable Diffusion, Midjourney, DALL-E variants)
 \end{itemize}
 
 \textbf{Deployment Recommendations:}
 \begin{itemize}
-    \item \textbf{Production}: Use EfficientNet-B2 for best accuracy
-    \item \textbf{Edge Devices}: Use Custom CNN for resource-constrained environments
-    \item \textbf{Cloud API}: Use ResNet50 for balanced performance
+    \item \textbf{Production}: Use Custom CNN for best accuracy (90.3\%)
+    \item \textbf{Edge Devices}: Custom CNN is also suitable - only 2.1M parameters for efficient inference
+    \item \textbf{Fine-tuning Opportunity}: Unfreeze transfer learning model backbones for potential improvement
 \end{itemize}
 
 % ================== References ==================

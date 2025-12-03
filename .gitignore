@@ -54,6 +54,9 @@ mlruns/
 *.pdf
 *.ttt
 *.fff
+*.nav
+*.snm
+*.vrb
 
 # Exception: include the final report PDF
 !report/main.pdf# pixi environments

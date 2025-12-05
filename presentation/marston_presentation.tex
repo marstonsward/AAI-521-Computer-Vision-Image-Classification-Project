@@ -88,7 +88,7 @@
                 \item \textbf{Diversity:} Portraits, animals, objects, scenes
             \end{itemize}
             
-            \vspace{0.3cm}
+            \vspace{0.1cm}
             \textbf{Preprocessing}
             \begin{itemize}
                 \item Resize to $224 \times 224$ pixels (RGB)
@@ -120,7 +120,7 @@
                 \end{tabular}
             \end{table}
             
-            \vspace{0.3cm}
+            \vspace{-0.1cm}
             \textbf{Key Decisions}
             \begin{itemize}
                 \item Balanced dataset reduces bias
@@ -236,6 +236,7 @@
 \begin{frame}{Results \& Performance}
     \begin{columns}[T]
         \begin{column}{0.5\textwidth}
+          \vspace{-0.2cm}
             \textbf{Model Comparison}
             \begin{table}[h]
                 \small
@@ -250,7 +251,7 @@
                 \end{tabular}
             \end{table}
             
-            \vspace{0.3cm}
+            \vspace{-0.1cm}
             \textbf{Custom CNN Classification Report}
             \begin{table}[h]
                 \tiny
@@ -266,7 +267,7 @@
                 \end{tabular}
             \end{table}
             
-            \vspace{0.2cm}
+            \vspace{-0.2cm}
             \begin{itemize}
                 \scriptsize
                 \item \textbf{Winner:} Custom CNN at 90.28\%
@@ -277,10 +278,10 @@
         
         \begin{column}{0.5\textwidth}
             \begin{center}
-                \textbf{Test Accuracy Comparison}
-                \vspace{0.2cm}
+                \vspace{-0.2cm}
+                 \textbf{Test Accuracy Comparison}
                 
-                \begin{tikzpicture}[scale=0.8]
+                \begin{tikzpicture}[scale=0.7]
                     % Custom CNN bar
                     \fill[blue!70] (0,0) rectangle (3.6,1.5);
                     \node at (1.8,0.75) {\textcolor{white}{\textbf{90.28\%}}};
@@ -298,7 +299,7 @@
                     
                     % Y-axis
                     \draw[thick,->] (-0.2,1.7) -- (-0.2,-3.8);
-                    \node[rotate=90] at (-0.6,-1.05) {Test Accuracy};
+                    \node[rotate=90] at (-1.4,-1.05) {Test Accuracy};
                     
                     % Scale markers
                     \draw (-0.15,0) -- (-0.25,0) node[anchor=east] {\tiny 70\%};
@@ -306,7 +307,7 @@
                 \end{tikzpicture}
             \end{center}
             
-            \vspace{0.3cm}
+            \vspace{-0.4cm}
             \textbf{Key Findings}
             \begin{itemize}
                 \scriptsize
@@ -321,10 +322,13 @@
 
 % Slide 5: Conclusions & Recommendations
 \begin{frame}{Conclusions \& Recommendations}
+    \vspace{-0.2cm}
+ 
     \begin{columns}[T]
         \begin{column}{0.48\textwidth}
             \textbf{Model Selection Guide}
             
+            \vspace{-0.2cm}
             \begin{block}{Best Accuracy (90.28\%)}
                 \textcolor{blue}{\textbf{Custom CNN}}
                 \begin{itemize}
@@ -336,7 +340,10 @@
                 \end{itemize}
             \end{block}
             
+            \vspace{-0.2cm}
             \begin{block}{Speed \& Efficiency}
+               \vspace{-0.1cm}
+ 
                 \textcolor{blue}{\textbf{Custom CNN}} (2.1M params)
                 \begin{itemize}
                     \scriptsize
@@ -355,7 +362,7 @@
         \end{column}
         
         \begin{column}{0.48\textwidth}
-            \textbf{Future Improvements}
+            \textbf{Some Future Improvements}
             \begin{enumerate}
                 \scriptsize
                 \item \textbf{Fine-tune transfer learning models}
@@ -363,12 +370,6 @@
                         \scriptsize
                         \item Unfreeze later backbone layers
                         \item Train for more epochs
-                    \end{itemize}
-                \item \textbf{Ensemble methods}
-                    \begin{itemize}
-                        \scriptsize
-                        \item Combine predictions
-                        \item Boost overall accuracy
                     \end{itemize}
                 \item \textbf{Advanced augmentation}
                     \begin{itemize}
@@ -390,7 +391,7 @@
                     \end{itemize}
             \end{enumerate}
             
-            \vspace{0.3cm}
+            \vspace{-0.2cm}
             \begin{block}{Deployment Recommendation}
                 \textbf{Production:} Use \textcolor{blue}{\textbf{Custom CNN}} for best accuracy (90.28\%) on this specific task
             \end{block}

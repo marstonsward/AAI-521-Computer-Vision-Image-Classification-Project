@@ -51,7 +51,6 @@ mlruns/
 *.fls
 *.fdb_latexmk
 *.synctex.gz
-*.pdf
 *.ttt
 *.fff
 *.nav
